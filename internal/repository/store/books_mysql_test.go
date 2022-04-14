@@ -136,7 +136,7 @@ func TestDeleteBookRepo(t *testing.T) {
 		query                    = "DELETE FROM books where id = ?"
 	)
 
-	db, mock, err := sqlmock.New( /*sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual)*/ )
+	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
