@@ -196,9 +196,10 @@ func TestDeleteBookRepoSetForeignKeyChecksFalse_Error(t *testing.T) {
 }
 
 func TestDeleteBookRepoDeleteBook_Error(t *testing.T) {
-	const setForeignKeyChecksFalse = "SET FOREIGN_KEY_CHECKS = OFF"
-
-	const query = "DELETE FROM books"
+	const (
+		setForeignKeyChecksFalse = "SET FOREIGN_KEY_CHECKS = OFF"
+		query                    = "DELETE FROM books"
+	)
 
 	_error := errors.New("delete book query error")
 
