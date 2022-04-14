@@ -1,9 +1,12 @@
-package mysql
+package store
 
 import (
 	"database/sql"
 	"fmt"
 	"go_web_server/internal/model"
+	"time"
+
+	"golang.org/x/net/context"
 )
 
 type BookDB struct {
@@ -49,7 +52,7 @@ func (b BookDB) UpdateBookRepo(book model.Book) (int, error) {
 
 func (b BookDB) DeleteBookRepo(id int) error {
 	setForeignKeyChecksFalse := `SET FOREIGN_KEY_CHECKS = OFF`
-	setForeignKeyChecksTrue := `SET FOREIGN_KEY_CHECKS= ON`
+	setForeignKeyChecksTrue := `SET FOREIGN_KEY_CHECKS = ON`
 	query := fmt.Sprintf(`DELETE FROM %s where id = ?;`, Books)
 
 	_, err := b.db.Exec(setForeignKeyChecksFalse)
@@ -75,15 +78,18 @@ func (b BookDB) FindAllBooksRepo() ([]model.Book, error) {
 
 	query := fmt.Sprintf(`SELECT * FROM %s;`, Books)
 
-	res, err := b.db.Query(query)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	rows, err := b.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 
-	for res.Next() {
+	for rows.Next() {
 		var book model.Book
 
-		err := res.Scan(&book.ID, &book.Name, &book.Genre, &book.Author)
+		err := rows.Scan(&book.ID, &book.Name, &book.Genre, &book.Author)
 		if err != nil {
 			return nil, err
 		}
@@ -97,13 +103,14 @@ func (b BookDB) FindAllBooksRepo() ([]model.Book, error) {
 func (b BookDB) FindBookByNameRepo(name string) (model.Book, error) {
 	var book model.Book
 
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
 	query := fmt.Sprintf(`SELECT * from %s WHERE book_name = ?;`, Books)
 
-	res, _ := b.db.Query(query, name)
-	for res.Next() {
-		if err := res.Scan(&book.ID, &book.Name, &book.Genre, &book.Author); err != nil {
-			return model.Book{}, err
-		}
+	err := b.db.QueryRowContext(ctx, query, name).Scan(&book.ID, &book.Name, &book.Genre, &book.Author)
+	if err != nil {
+		return model.Book{}, err
 	}
 
 	return book, nil

@@ -20,7 +20,7 @@ func (h *Handler) AddUser(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.UserService.AddUser(data)
+	id, err := h.repos.UserData.AddUserRepo(data)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -32,7 +32,7 @@ func (h *Handler) AddUser(c *gin.Context) {
 }
 
 func (h *Handler) FindAllUsers(c *gin.Context) {
-	list, err := h.services.UserService.FindAllUsers()
+	list, err := h.repos.UserData.FindAllUsersRepo()
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -50,7 +50,7 @@ func (h *Handler) AddBookToUser(c *gin.Context) {
 		return
 	}
 
-	err := h.services.UserService.AddBookToUser(data.UserID, data.BookID)
+	err := h.repos.UserData.UserAddBookRepo(data.UserID, data.BookID)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -75,7 +75,7 @@ func (h *Handler) DeleteBookFromUser(c *gin.Context) {
 		return
 	}
 
-	err = h.services.UserService.DeleteBookFromUser(uid, bid)
+	err = h.repos.DeleteBookFromUserRepo(uid, bid)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -92,7 +92,7 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	affectedRow, err := h.services.UserService.UpdateUser(data)
+	affectedRow, err := h.repos.UpdateUserRepo(data)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -112,7 +112,7 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	err = h.services.UserService.DeleteUser(id)
+	err = h.repos.DeleteBookRepo(id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -130,7 +130,7 @@ func (h *Handler) FindUserByID(c *gin.Context) {
 		return
 	}
 
-	user, err := h.services.UserService.FindUserByID(id)
+	user, err := h.repos.FindUserByIDRepo(id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

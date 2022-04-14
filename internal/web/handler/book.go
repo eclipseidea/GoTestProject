@@ -15,7 +15,7 @@ func (h *Handler) AddBook(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.BookService.AddBook(data)
+	id, err := h.repos.AddBookRepo(data)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -33,7 +33,7 @@ func (h *Handler) UpdateBook(c *gin.Context) {
 		return
 	}
 
-	affectedRow, err := h.services.BookService.UpdateBook(data)
+	affectedRow, err := h.repos.UpdateBookRepo(data)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -53,7 +53,7 @@ func (h *Handler) DeleteBook(c *gin.Context) {
 		return
 	}
 
-	err = h.services.BookService.DeleteBook(id)
+	err = h.repos.DeleteBookRepo(id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -63,7 +63,7 @@ func (h *Handler) DeleteBook(c *gin.Context) {
 }
 
 func (h *Handler) FindAllBook(c *gin.Context) {
-	books, err := h.services.BookService.FindAllBooks()
+	books, err := h.repos.BookData.FindAllBooksRepo()
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -77,7 +77,7 @@ func (h *Handler) FindAllBook(c *gin.Context) {
 func (h *Handler) FindBookByName(c *gin.Context) {
 	bookName := c.Param("name")
 
-	book, err := h.services.BookService.FindBookByName(bookName)
+	book, err := h.repos.FindBookByNameRepo(bookName)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

@@ -66,7 +66,7 @@ postman URLs:
 
          GET http://127.0.0.1:8080/book/db_query/booksFindAll/
 
-         GET http://127.0.0.1:8080/book/db_query/findBookByName/Programs/
+         GET http://127.0.0.1:8080/book/db_query/findBookByName/name/
 
          
 

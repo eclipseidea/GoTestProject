@@ -1,18 +1,18 @@
 package handler
 
 import (
-	"go_web_server/internal/service"
+	"go_web_server/internal/repository/store"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	services *service.Service
+	repos *store.Repository
 }
 
-func NewHandler(services *service.Service) *Handler {
-	return &Handler{services: services}
+func NewHandler(repo *store.Repository) *Handler {
+	return &Handler{repos: repo}
 }
 
 func (h *Handler) InitHTTPRouter() *gin.Engine {

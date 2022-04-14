@@ -1,28 +1,27 @@
-package repository
+package store
 
 import (
 	"database/sql"
 	"go_web_server/internal/model"
-	"go_web_server/internal/repository/mysql"
 )
 
-type InitDBRepository interface {
+type InitDB interface {
 	CreateTables() error
 	InsertInto() error
 	DropDataBase() error
 }
 
-type UserDataRepository interface {
+type UserData interface {
 	AddUserRepo(user model.User) (int, error)
 	FindAllUsersRepo() ([]model.User, error)
-	AddBookRepo(userID, bookID int) error
+	UserAddBookRepo(userID, bookID int) error
 	DeleteBookFromUserRepo(userID, bookID int) error
 	UpdateUserRepo(user model.User) (int, error)
 	DeleteUserRepo(id int) error
 	FindUserByIDRepo(id int) (model.User, error)
 }
 
-type BookDataRepository interface {
+type BookData interface {
 	AddBookRepo(book model.Book) (int, error)
 	UpdateBookRepo(book model.Book) (int, error)
 	DeleteBookRepo(id int) error
@@ -31,15 +30,15 @@ type BookDataRepository interface {
 }
 
 type Repository struct {
-	InitDBRepository
-	UserDataRepository
-	BookDataRepository
+	InitDB
+	UserData
+	BookData
 }
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
-		InitDBRepository:   mysql.InitTables(db),
-		UserDataRepository: mysql.NewUserPoll(db),
-		BookDataRepository: mysql.NewBookPool(db),
+		InitDB:   InitTables(db),
+		UserData: NewUserPoll(db),
+		BookData: NewBookPool(db),
 	}
 }

@@ -1,4 +1,4 @@
-package mysql
+package store
 
 import (
 	"database/sql"
@@ -12,7 +12,8 @@ const (
 	ReadBooks = "read_books"
 )
 
-type Config struct {
+type ConfigDB struct {
+	DB       string
 	Username string
 	Password string
 	Host     string
@@ -20,11 +21,11 @@ type Config struct {
 	DBName   string
 }
 
-func NewMySQLDB(c *Config) (*sql.DB, error) {
+func NewDB(c *ConfigDB) (*sql.DB, error) {
 	log.Println(c.Host, c.Port, c.DBName)
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
-		c.Username, c.Password, c.Host, c.Port, c.DBName))
 
+	db, err := sql.Open(c.DB, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		c.Username, c.Password, c.Host, c.Port, c.DBName))
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,4 @@
-package mysql
+package store
 
 import (
 	"database/sql"
@@ -42,15 +42,15 @@ var insertIntoTableUsers = fmt.Sprintf(`INSERT INTO %s(user_name,age,city)
 var insertIntoTableReadBooks = fmt.Sprintf(`INSERT INTO %s(user_id,book_id) 
                                        VALUES (3,3),(3,1),(2,1),(1,5)`, ReadBooks)
 
-type InitDB struct {
+type InitDBRepository struct {
 	db *sql.DB
 }
 
-func InitTables(db *sql.DB) *InitDB {
-	return &InitDB{db: db}
+func InitTables(db *sql.DB) *InitDBRepository {
+	return &InitDBRepository{db: db}
 }
 
-func (i InitDB) DropDataBase() error {
+func (i InitDBRepository) DropDataBase() error {
 	_, err := i.db.Exec(dropTablesQuery)
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (i InitDB) DropDataBase() error {
 	return nil
 }
 
-func (i InitDB) CreateTables() error {
+func (i InitDBRepository) CreateTables() error {
 	err := i.DropDataBase()
 	if err != nil {
 		return err
@@ -83,7 +83,7 @@ func (i InitDB) CreateTables() error {
 	return nil
 }
 
-func (i InitDB) InsertInto() error {
+func (i InitDBRepository) InsertInto() error {
 	_, err := i.db.Exec(insertIntoTableBooks)
 	if err != nil {
 		return err
