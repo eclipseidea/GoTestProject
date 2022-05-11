@@ -6,7 +6,7 @@ type Server struct {
 	server *http.Server
 }
 
-func (s Server) Run(port string, handler http.Handler) error {
+func (s Server) ServerRun(port string, handler http.Handler) error {
 	s.server = &http.Server{
 		Addr:    ":" + port,
 		Handler: handler,

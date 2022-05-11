@@ -47,7 +47,7 @@ func Run() {
 	}
 
 	srv := new(ws.Server)
-	if err := srv.Run("8080", handlers.InitHTTPRouter()); err != nil {
+	if err := srv.ServerRun("8080", handlers.InitHTTPRouter()); err != nil {
 		log.Fatalf("error occurred while run http server:%s", err.Error())
 	}
 }

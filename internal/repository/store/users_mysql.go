@@ -9,15 +9,15 @@ import (
 	"golang.org/x/net/context"
 )
 
-type UserRepository struct {
+type UserDB struct {
 	db *sql.DB
 }
 
-func NewUserPoll(db *sql.DB) *UserRepository {
-	return &UserRepository{db: db}
+func NewUserPoll(db *sql.DB) *UserDB {
+	return &UserDB{db: db}
 }
 
-func (s *UserRepository) AddUserRepo(user model.User) (int, error) {
+func (s *UserDB) AddUserRepo(user model.User) (int, error) {
 	query := fmt.Sprintf(`INSERT INTO %s (user_name,age,city) VALUES (?,?,?);`, Users)
 
 	res, err := s.db.Exec(query, user.Name, user.Age, user.City)
@@ -33,7 +33,7 @@ func (s *UserRepository) AddUserRepo(user model.User) (int, error) {
 	return int(id), nil
 }
 
-func (s *UserRepository) FindAllUsersRepo() ([]model.User, error) {
+func (s *UserDB) FindAllUsersRepo() ([]model.User, error) {
 	var userList []model.User
 
 	query := fmt.Sprintf(`SELECT * FROM %s;`, Users)
@@ -60,7 +60,7 @@ func (s *UserRepository) FindAllUsersRepo() ([]model.User, error) {
 	return userList, nil
 }
 
-func (s *UserRepository) UserAddBookRepo(userID, bookID int) error {
+func (s *UserDB) UserAddBookRepo(userID, bookID int) error {
 	query := fmt.Sprintf(`INSERT INTO %s (user_id,book_id) VALUES (?,?);`, ReadBooks)
 
 	_, err := s.db.Exec(query, userID, bookID)
@@ -71,7 +71,7 @@ func (s *UserRepository) UserAddBookRepo(userID, bookID int) error {
 	return nil
 }
 
-func (s *UserRepository) DeleteBookFromUserRepo(userID, bookID int) error {
+func (s *UserDB) DeleteBookFromUserRepo(userID, bookID int) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE  user_id = ? AND book_id = ?;`, ReadBooks)
 	if _, err := s.db.Exec(query, userID, bookID); err != nil {
 		return err
@@ -80,7 +80,7 @@ func (s *UserRepository) DeleteBookFromUserRepo(userID, bookID int) error {
 	return nil
 }
 
-func (s *UserRepository) UpdateUserRepo(user model.User) (int, error) {
+func (s *UserDB) UpdateUserRepo(user model.User) (int, error) {
 	query := fmt.Sprintf(`UPDATE %s SET user_name = ?, age = ?,city = ? WHERE id=?;`, Users)
 
 	res, err := s.db.Exec(query, user.Name, user.Age, user.City, user.ID)
@@ -96,7 +96,7 @@ func (s *UserRepository) UpdateUserRepo(user model.User) (int, error) {
 	return int(rowAffected), nil
 }
 
-func (s *UserRepository) DeleteUserRepo(id int) error {
+func (s *UserDB) DeleteUserRepo(id int) error {
 	deleteUserWithBooks := fmt.Sprintf(`DELETE FROM %s WHERE  user_id = %d`, ReadBooks, id)
 	query := fmt.Sprintf(`DELETE FROM %s where id = ?;`, Users)
 
@@ -113,7 +113,7 @@ func (s *UserRepository) DeleteUserRepo(id int) error {
 	return nil
 }
 
-func (s *UserRepository) FindUserByIDRepo(id int) (model.User, error) {
+func (s *UserDB) FindUserByIDRepo(id int) (model.User, error) {
 	var user model.User
 
 	query := fmt.Sprintf(`SELECT * from %s where id = ?`, Users)

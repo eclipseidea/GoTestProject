@@ -112,7 +112,7 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	err = h.repos.DeleteBookRepo(id)
+	err = h.repos.DeleteUserRepo(id)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
